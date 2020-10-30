@@ -20,6 +20,7 @@ setup(
     license='Apache 2.0',
     packages=find_packages(exclude=['tests']),
     scripts=['pkb.py'],
+    include_package_data=True,
     install_requires=['absl-py',
                       'jinja2>=2.7',
                       'setuptools'])

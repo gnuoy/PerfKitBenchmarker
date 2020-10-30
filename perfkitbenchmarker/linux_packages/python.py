@@ -26,8 +26,9 @@ def YumInstall(vm):
 
 def AptInstall(vm):
   """Installs the package on the VM."""
-  vm.InstallPackages('python python2.7')
-  _SetDefaultPythonIfNeeded(vm, '/usr/bin/python2')
+  vm.InstallPackages(vm.PYTHON_PACKAGE)
+  if not vm.PYTHON_PACKAGE.startswith('python3'):
+    _SetDefaultPythonIfNeeded(vm, '/usr/bin/{}'.format(vm.PYTHON_PACKAGE))
 
 
 def SwupdInstall(vm):

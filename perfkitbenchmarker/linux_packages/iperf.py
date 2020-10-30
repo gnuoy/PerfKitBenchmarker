@@ -15,11 +15,13 @@
 
 """Module containing iperf installation and cleanup functions."""
 
+from absl import flags
 import posixpath
 
 from perfkitbenchmarker import errors
 from perfkitbenchmarker import linux_packages
 
+FLAGS = flags.FLAGS
 PACKAGE_NAME = 'iperf'
 IPERF_TAR = 'iperf-2.0.13.tar.gz'
 IPERF_URL = 'https://sourceforge.net/projects/iperf2/files/iperf-2.0.13.tar.gz'
@@ -30,6 +32,12 @@ def _Install(vm):
   """Installs the iperf package on the VM."""
   vm.Install('build_tools')
   vm.Install('wget')
+  if FLAGS.http_proxy:
+    http_proxy = "echo 'http_proxy = %s' >> /home/ubuntu/.wgetrc"
+    vm.RemoteCommand(http_proxy % FLAGS.http_proxy)
+  if FLAGS.https_proxy:
+    https_proxy = "echo 'https_proxy = %s' >> /home/ubuntu/.wgetrc"
+    vm.RemoteCommand(https_proxy % FLAGS.https_proxy)
 
   vm.RemoteCommand('wget -O %s/%s %s' %
                    (linux_packages.INSTALL_DIR, IPERF_TAR, IPERF_URL))
